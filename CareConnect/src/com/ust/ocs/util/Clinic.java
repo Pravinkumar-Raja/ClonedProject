@@ -19,8 +19,8 @@ public class Clinic {
 	{
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			con=DriverManager.getConnection("jdbc:mysql://localhost:3306/pk","root","pass@word1");
-			
+			con=DriverManager.getConnection("jdbc:mysql://localhost:3306/careconnect","root","pass@word1");
+			System.out.println("Connected Successfully");
 		}
 		catch(ClassNotFoundException cnf)
 		{
@@ -40,8 +40,8 @@ public class Clinic {
 			ps=con.prepareStatement("insert into OCS_TBL_DOCTOR(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?");
 			ps.setString(1, d.getDoctorID());
 			ps.setString(2, d.getDoctorName());
-			ps.setDate(3, (Date) d.getDateOfBirth());
-			ps.setDate(4, (Date) d.getDateOfJoining());
+//			ps.setDate(3, d.getDateOfBirth());
+//			ps.setDate(4, d.getDateOfJoining());
 			ps.setString(5, d.getGender());
 			ps.setString(6, d.getQualification());
 			ps.setString(7, d.getSpecialization());

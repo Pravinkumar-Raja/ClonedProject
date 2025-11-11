@@ -16,17 +16,17 @@ public class Login {
 	public static boolean b;
 
 	public static ArrayList <DoctorBean>al=new ArrayList<>();
-
+public static DoctorBean d;
 	public static void main(String[] args) {
 		CredentialBean cb=new CredentialBean();
-		DoctorBean d=new DoctorBean();
+	d=new DoctorBean();
 		AdministratorDao ad=new AdministratorDao();
 		Scanner s=new Scanner(System.in);
 		id=JOptionPane.showInputDialog("Enter the Login Id");
 		cb.setUserID(id);
 		password=JOptionPane.showInputDialog("Enter the Password");
 		cb.setPassword(password);
-		SimpleDateFormat sdf=new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd");
 		
 //		if(cb.getUserID().equalsIgnoreCase("Admin")&&cb.getPassword().equalsIgnoreCase("Admin@123"))
 //		{
@@ -58,16 +58,17 @@ public class Login {
 		
 		switch(ch)
 		{
-		case "AD-001":  int n=Integer.parseInt(JOptionPane.showInputDialog("Enter the no of doctor needed"));
-		for(int i=0;i<n;i++)
-		{
+		case "AD-001": 
+			//int n=Integer.parseInt(JOptionPane.showInputDialog("Enter the no of doctor needed"));
+//		for(int i=0;i<n;i++)
+//		{
 
 			d.setDoctorID(JOptionPane.showInputDialog("Enter the Doctor id"));
 			d.setDoctorName(JOptionPane.showInputDialog("Enter the Doctor Name"));
 			d.setGender(JOptionPane.showInputDialog("Enter the Gender"));
 			
 			
-				String dat=JOptionPane.showInputDialog("Enter the date of birth");
+				String dat=JOptionPane.showInputDialog("Enter the date of birth(yyyy/mm/dd)");
 				java.util.Date dob = null;
 				try {
 					dob = sdf.parse(dat);
@@ -75,6 +76,7 @@ public class Login {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+//				java.sql.Date sqld=new java.sql.Date(dob.getTime());
 				d.setDateOfBirth(dob);
 		
 //			d.setDateOfBirth(JOptionPane.showInputDialog("Enter the DOB (DD/MM/YYYY)"));
@@ -83,7 +85,7 @@ public class Login {
 			d.setSpecialization(JOptionPane.showInputDialog("Enter the Specification"));
 			d.setYearsOfExperience(Integer.parseInt(JOptionPane.showInputDialog("Enter the Years of Experience ")));
 			
-			String dat2=JOptionPane.showInputDialog("Enter the date of joining ");
+			String dat2=JOptionPane.showInputDialog("Enter the date of joining(yyyy/mm/dd)");
 			java.util.Date doj = null;
 			try {
 				doj = sdf.parse(dat2);
@@ -102,12 +104,19 @@ public class Login {
 			d.setEmailID(JOptionPane.showInputDialog("Enter the email id"));
 			System.out.println(ad.addDoctor(d));
 			al.add(d);
-			JOptionPane.showMessageDialog(null, ad.addDoctor(d));
-		}
+			ad.addDoctor(d);
+			
+		//}
 		
 		break;
-		case "AD-002": ad.viewAllDoctors();
+		case "AD-002": ArrayList<DoctorBean>md=new ArrayList<DoctorBean>();
+		md=ad.viewAllDoctors();
+		for(DoctorBean al1:md)
+		{
+			System.out.println(al1);
+		}
 			break;
+			
 		case "AD-003": 	String str=JOptionPane.showInputDialog("Enter Yes or No");
 		if(str.equalsIgnoreCase("Yes"))
 		{
@@ -119,24 +128,25 @@ public class Login {
 				if(arr2.getDoctorID().equals(ch))
 				{
 					do {
-						choice=JOptionPane.showInputDialog("Enter the field (Id,Name,Gender,DOB,Qualification,Specilization,YOE,DOJ,Street,Location,State,City,Pincode,CNo,Email,Exit");
+						choice=JOptionPane.showInputDialog("Enter the field (Name,Gender,DOB,Qualification,Specilization,YOE,DOJ,Street,Location,State,City,Pincode,CNo,Email,Exit");
 						switch(choice)
 						{
-						case "Id": arr2.setDoctorID(JOptionPane.showInputDialog("Enter the new Id"));
-						b=ad.modifyDoctor(arr2);
-						if(b)
-						{
-							JOptionPane.showMessageDialog(null, "Modified the details Successfully");
-							System.out.println("Modified the details Successfully");
-						}
-						else
-						{
-							JOptionPane.showMessageDialog(null, "Failed to Modify");
-						}
-						
-						break;
+//						case "Id": arr2.setDoctorID(JOptionPane.showInputDialog("Enter the new Id"));
+//						b=ad.modifyDoctor(arr2);
+//						if(b)
+//						{
+//							JOptionPane.showMessageDialog(null, "Modified the details Successfully");
+//							System.out.println("Modified the details Successfully");
+//						}
+//						else
+//						{
+//							JOptionPane.showMessageDialog(null, "Failed to Modify");
+//						}
+//						
+//						break;
 
-						case "Name": arr2.setDoctorName(JOptionPane.showInputDialog("Enter the new name"));
+						case "Name": 
+							arr2.setDoctorName(JOptionPane.showInputDialog("Enter the new name"));
 						b=ad.modifyDoctor(arr2);
 						if(b)
 						{
@@ -163,15 +173,15 @@ public class Login {
 						break;
 	
 						case "DOB": 
-						String dat=JOptionPane.showInputDialog("Enter the new date of birth");
-							java.util.Date dob = null;
+						String dat1=JOptionPane.showInputDialog("Enter the new date of birth(yyyy/mm/dd)");
+							java.sql.Date dob1 = null;
 							try {
-								dob = sdf.parse(dat);
+								dob1 = (Date) sdf.parse(dat1);
 							} catch (ParseException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-						arr2.setDateOfBirth(dob);
+						arr2.setDateOfBirth(dob1);
 				        
 						b=ad.modifyDoctor(arr2);
 						if(b)
@@ -225,15 +235,15 @@ public class Login {
 						break;
 	
 						case "DOJ":  
-						String dat2=JOptionPane.showInputDialog("Enter the date of joining ");
-							java.util.Date doj = null;
+						String dat21=JOptionPane.showInputDialog("Enter the date of joining (yyyy/mm/dd)");
+							java.sql.Date doj1 = null;
 							try {
-								doj = sdf.parse(dat2);
+								doj1 = (Date) sdf.parse(dat21);
 							} catch (ParseException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-						arr2.setDateOfJoining(doj);
+						arr2.setDateOfJoining(doj1);
 						b=ad.modifyDoctor(arr2);
 						if(b)
 						{

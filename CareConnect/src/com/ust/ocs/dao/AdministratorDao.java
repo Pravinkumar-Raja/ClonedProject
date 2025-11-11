@@ -27,12 +27,13 @@ import java.util.*
 	public static Connection con=getCon();
 	public static PreparedStatement ps;
 	public static ResultSet rs;
+	public static ArrayList<DoctorBean> sd=new ArrayList<DoctorBean>();
 	
 	public static Connection getCon()
 	{
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			con=DriverManager.getConnection("jdbc:mysql://localhost:","root","pass@word1");
+			con=DriverManager.getConnection("jdbc:mysql://localhost:3306/careconnect","root","pass@word1");
 			
 		}
 		catch(ClassNotFoundException cnf)
@@ -70,55 +71,99 @@ import java.util.*
 //		return "Failed to Add";
 //		
 //		
+		java.util.Date d1=Login.d.getDateOfBirth();
+		java.sql.Date sqlDate=new java.sql.Date(d1.getTime());
+		java.util.Date d2=Login.d.getDateOfJoining();
+		java.sql.Date sqlDate2=new java.sql.Date(d2.getTime());
 		int i=0;
 		try {
-			ps=con.prepareStatement("insert into OCS_TBL_DOCTOR(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?");
+			ps=con.prepareStatement("insert into OCS_TBL_DOCTOR values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 			ps.setString(1, doctoerBean.getDoctorID());
 			ps.setString(2, doctoerBean.getDoctorName());
-			ps.setDate(3, (java.sql.Date) doctoerBean.getDateOfBirth());
-			ps.setDate(4, (java.sql.Date) doctoerBean.getDateOfJoining());
+			ps.setDate(3, sqlDate);
+			ps.setDate(4, sqlDate2);
 			ps.setString(5, doctoerBean.getGender());
 			ps.setString(6, doctoerBean.getQualification());
 			ps.setString(7, doctoerBean.getSpecialization());
 			ps.setInt(8, doctoerBean.getYearsOfExperience());
 			ps.setString(9, doctoerBean.getStreet());
 			ps.setString(10, doctoerBean.getLocation());
-			ps.setString(11, doctoerBean.getLocation());
-			ps.setString(12, doctoerBean.getState());
-			ps.setString(13, doctoerBean.getCity());
+			ps.setString(11, doctoerBean.getState());
+			ps.setString(12, doctoerBean.getCity());
+			ps.setString(13, doctoerBean.getPincode());
 			ps.setString(14, doctoerBean.getContactNumber());
 			ps.setString(15, doctoerBean.getEmailID());
 			i=ps.executeUpdate();
 			
 		}catch(SQLException e)
 		{
-			System.out.println(e);
+			System.out.println(e.getMessage());
+			
 		}
-		return "Doctor Added Successfully";
+		String i1=String.valueOf(i);
+		if(i1.equals("1")){
+			return "Doctor Added Successfully";
+		}
+		return "Failed to add ";
 		
-	}
-
-	@Override
-	public Boolean modifyDoctor(DoctorBean doctorBean) {
-		ar.add(doctorBean);
-		boolean bool=true;
-		if(al==ar)
-		{
-			bool=false;
-		}
-		return bool;
 	}
 
 	@Override
 	public ArrayList<DoctorBean> viewAllDoctors() {
-		for(DoctorBean d:al)
-		{
-			System.out.println(d);
-//			JOptionPane.showMessageDialog(null, d);
-		}
 		
-		return null;
+	try {
+		DoctorBean d=new DoctorBean();
+		ps=con.prepareStatement("select * from OCS_TBL_DOCTOR");
+		rs=ps.executeQuery();
+		while(rs.next())
+		{
+			d.setDoctorID(rs.getString(1));
+			d.setDoctorName(rs.getString(2));
+			d.setDateOfBirth(rs.getDate(3));
+			d.setDateOfJoining(rs.getDate(4));
+			d.setGender(rs.getString(5));
+			d.setQualification(rs.getString(6));
+			d.setSpecialization(rs.getString(7));
+			d.setYearsOfExperience(rs.getInt(8));
+			d.setStreet(rs.getString(9));
+			d.setLocation(rs.getString(10));
+			d.setState(rs.getString(11));
+			d.setCity(rs.getString(12));
+			d.setPincode(rs.getString(13));
+			d.setContactNumber(rs.getString(14));
+			d.setEmailID(rs.getString(15));
+			
+		}
+		sd.add(d);
+	} catch (SQLException e) {
+		
+		e.printStackTrace();
 	}
+		
+		return sd;
+	}
+	
+	@Override
+	public Boolean modifyDoctor(DoctorBean doctorBean) {
+//		ar.add(doctorBean);
+		boolean bool=true;
+//		if(al==ar)
+//		{
+//			bool=false;
+//		}
+		DoctorBean dr=new DoctorBean();
+		
+		if(dr.getDoctorID().equals(""))
+		{
+			
+		}
+		return bool;
+		
+		
+		
+	}
+
+	
 
 	@Override
 	public int removeDoctor(String doctorID) {
@@ -131,10 +176,26 @@ import java.util.*
 //			
 //		}
 //		}
-		al.remove(doctorID);
-		System.out.println("The Doctor Details Removed Successfully");
-		JOptionPane.showMessageDialog(null, "Doctor Details removed Successfully");
-		
+//		al.remove(doctorID);
+//		System.out.println("The Doctor Details Removed Successfully");
+//		
+		int i=0;
+		try {
+			ps=con.prepareStatement("delete from OCS_TBL_DOCTOR where DOCTORID=?");
+			ps.setString(1,doctorID);
+			i=ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(i==1)
+		{
+			JOptionPane.showMessageDialog(null, "Doctor Details removed Successfully");
+		}
+		else 
+		{
+			JOptionPane.showMessageDialog(null, "Failed to remove the doctor details");
+		}
 		return 0;
 	}
 
