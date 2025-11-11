@@ -5,8 +5,8 @@ import java.util.Date;
 public class DoctorBean {
 	private String doctorID;
 	private String doctorName;
-	private String dateOfBirth;
-	private String dateOfJoining;
+	private Date dateOfBirth;
+	private Date dateOfJoining;
 	private String gender;
 	private String qualification;
 	private String specialization;
@@ -30,16 +30,16 @@ public class DoctorBean {
 	public void setDoctorName(String doctorName) {
 		this.doctorName = doctorName;
 	}
-	public String getDateOfBirth() {
+	public Date getDateOfBirth() {
 		return dateOfBirth;
 	}
-	public void setDateOfBirth(String dateOfBirth) {
+	public void setDateOfBirth(Date dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
-	public String getDateOfJoining() {
+	public Date getDateOfJoining() {
 		return dateOfJoining;
 	}
-	public void setDateOfJoining(String dateOfJoining) {
+	public void setDateOfJoining(Date dateOfJoining) {
 		this.dateOfJoining = dateOfJoining;
 	}
 	public String getGender() {

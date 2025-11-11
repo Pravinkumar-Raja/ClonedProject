@@ -1,6 +1,9 @@
 package com.ust.ocs.main;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.sql.Date;
 import java.util.Scanner;
 
 import javax.swing.JOptionPane;
@@ -13,7 +16,7 @@ public class Login {
 	public static boolean b;
 
 	public static ArrayList <DoctorBean>al=new ArrayList<>();
-//	static ArrayList <DoctorBean>ar=new ArrayList<>();
+
 	public static void main(String[] args) {
 		CredentialBean cb=new CredentialBean();
 		DoctorBean d=new DoctorBean();
@@ -23,6 +26,8 @@ public class Login {
 		cb.setUserID(id);
 		password=JOptionPane.showInputDialog("Enter the Password");
 		cb.setPassword(password);
+		SimpleDateFormat sdf=new SimpleDateFormat("dd/MM/yyyy");
+		
 //		if(cb.getUserID().equalsIgnoreCase("Admin")&&cb.getPassword().equalsIgnoreCase("Admin@123"))
 //		{
 //			cb.setLoginStatus(1);
@@ -60,11 +65,34 @@ public class Login {
 			d.setDoctorID(JOptionPane.showInputDialog("Enter the Doctor id"));
 			d.setDoctorName(JOptionPane.showInputDialog("Enter the Doctor Name"));
 			d.setGender(JOptionPane.showInputDialog("Enter the Gender"));
-			d.setDateOfBirth(JOptionPane.showInputDialog("Enter the DOB (DD/MM/YYYY)"));
+			
+			
+				String dat=JOptionPane.showInputDialog("Enter the date of birth");
+				java.util.Date dob = null;
+				try {
+					dob = sdf.parse(dat);
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				d.setDateOfBirth(dob);
+		
+//			d.setDateOfBirth(JOptionPane.showInputDialog("Enter the DOB (DD/MM/YYYY)"));
+			
 			d.setQualification(JOptionPane.showInputDialog("Enter the Qualification"));
 			d.setSpecialization(JOptionPane.showInputDialog("Enter the Specification"));
 			d.setYearsOfExperience(Integer.parseInt(JOptionPane.showInputDialog("Enter the Years of Experience ")));
-			d.setDateOfJoining(JOptionPane.showInputDialog("Enter the date of joining "));
+			
+			String dat2=JOptionPane.showInputDialog("Enter the date of joining ");
+			java.util.Date doj = null;
+			try {
+				doj = sdf.parse(dat2);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			d.setDateOfJoining(doj);
+			
 			d.setStreet(JOptionPane.showInputDialog("Enter the Street"));
 			d.setLocation(JOptionPane.showInputDialog("Enter the Location"));
 			d.setState(JOptionPane.showInputDialog("Enter the State"));
@@ -74,7 +102,7 @@ public class Login {
 			d.setEmailID(JOptionPane.showInputDialog("Enter the email id"));
 			System.out.println(ad.addDoctor(d));
 			al.add(d);
-			JOptionPane.showMessageDialog(null, "Doctor added Successfully");
+			JOptionPane.showMessageDialog(null, ad.addDoctor(d));
 		}
 		
 		break;
@@ -134,7 +162,17 @@ public class Login {
 						}
 						break;
 	
-						case "DOB": arr2.setDateOfBirth(JOptionPane.showInputDialog("Enter the new DOB"));
+						case "DOB": 
+						String dat=JOptionPane.showInputDialog("Enter the new date of birth");
+							java.util.Date dob = null;
+							try {
+								dob = sdf.parse(dat);
+							} catch (ParseException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						arr2.setDateOfBirth(dob);
+				        
 						b=ad.modifyDoctor(arr2);
 						if(b)
 						{
@@ -186,7 +224,16 @@ public class Login {
 						}
 						break;
 	
-						case "DOJ":  arr2.setDateOfJoining(JOptionPane.showInputDialog("Enter the new DOJ"));
+						case "DOJ":  
+						String dat2=JOptionPane.showInputDialog("Enter the date of joining ");
+							java.util.Date doj = null;
+							try {
+								doj = sdf.parse(dat2);
+							} catch (ParseException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						arr2.setDateOfJoining(doj);
 						b=ad.modifyDoctor(arr2);
 						if(b)
 						{
