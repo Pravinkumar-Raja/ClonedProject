@@ -47,17 +47,34 @@ import java.util.*
 		return con;
 	}
 	
-	public Boolean login(CredentialBean creadential)
+	public int login(CredentialBean creadential)
 	{
 		
-		if(creadential.getUserID().equalsIgnoreCase("Admin")&&creadential.getPassword().equalsIgnoreCase("Admin@123"))
-		{
+//		if(creadential.getUserID().equalsIgnoreCase("Admin")&&creadential.getPassword().equalsIgnoreCase("Admin@123"))
+//		{
+//		
+//			creadential.setLoginStatus(1);
+//			creadential.setUserType("Admin");
+//			return true;
+//		}
+		int i=0;
+		try {
+			ps=con.prepareStatement("select * from ocs_tbl_credentials");
+//			ps.setString(1, creadential.getUserID());
+//			ps.setString(2, creadential.getPassword());
 		
-			creadential.setLoginStatus(1);
-			creadential.setUserType("Admin");
-			return true;
+			rs=ps.executeQuery();
+			if(rs.getString("USERID").equals(creadential.getUserID())&& rs.getString("PASSWORD").equals(creadential.getPassword()))
+			{
+				i=1;
+				return i;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		return false;
+		
+		return 0;
 	}
 	
 	@Override
@@ -201,7 +218,19 @@ import java.util.*
 
 	@Override
 	public ArrayList<DoctorBean> suggestDoctors(String patientId, Date date) {
-		// TODO Auto-generated method stub
+		ArrayList<DoctorBean> sg=new ArrayList<DoctorBean>();
+		int i=0;
+		java.sql.Date e=new java.sql.Date(date.getTime());
+		
+		AppointmentBean ab=new AppointmentBean();
+		try {
+			ps=con.prepareStatement("select * from OCS_TBL_LEAVE where DATE=?");
+		ps.setDate(1, e);
+		i=ps.executeUpdate();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		return null;
 	}
 

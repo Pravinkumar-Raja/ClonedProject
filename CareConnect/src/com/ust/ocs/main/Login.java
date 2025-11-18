@@ -21,6 +21,7 @@ public static DoctorBean d;
 		CredentialBean cb=new CredentialBean();
 	d=new DoctorBean();
 		AdministratorDao ad=new AdministratorDao();
+		AppointmentBean ab=new AppointmentBean();
 		Scanner s=new Scanner(System.in);
 		id=JOptionPane.showInputDialog("Enter the Login Id");
 		cb.setUserID(id);
@@ -365,6 +366,21 @@ public static DoctorBean d;
 			
 		}
 		break;
+		
+		case "AD-005" : String pId=JOptionPane.showInputDialog("Enter the Patient id");
+		ab.setPatientID(pId);
+		
+		String date=JOptionPane.showInputDialog("Enter the date");
+		java.util.Date dt=null;
+			try {
+				dt=sdf.parse(date);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			ab.setAppointmentDate(dt);
+			ad.suggestDoctors(pId, dt);
+			break;
 		case "Exit": System.exit(0);
 		}
 		
@@ -373,7 +389,7 @@ public static DoctorBean d;
 			}
 			else {
 				JOptionPane.showMessageDialog(null, "Login Failed");
-				System.out.println("Failed to Login");
+				System.out.println("Retry again");
 			}
 			
 		
