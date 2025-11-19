@@ -108,6 +108,31 @@ public class DoctorBean {
 	public void setEmailID(String emailID) {
 		this.emailID = emailID;
 	}
+	
+	public DoctorBean()
+	{
+		
+	}
+//	public DoctorBean(String doctorID, String doctorName, Date dateOfBirth, Date dateOfJoining, String gender,
+//			String qualification, String specialization, int yearsOfExperience, String street, String location,
+//			String city, String state, String pincode, String contactNumber, String emailID) {
+//		super();
+//		this.doctorID = doctorID;
+//		this.doctorName = doctorName;
+//		this.dateOfBirth = dateOfBirth;
+//		this.dateOfJoining = dateOfJoining;
+//		this.gender = gender;
+//		this.qualification = qualification;
+//		this.specialization = specialization;
+//		this.yearsOfExperience = yearsOfExperience;
+//		this.street = street;
+//		this.location = location;
+//		this.city = city;
+//		this.state = state;
+//		this.pincode = pincode;
+//		this.contactNumber = contactNumber;
+//		this.emailID = emailID;
+//	}
 	@Override
 	public String toString() {
 		return "DoctorBean [doctorID=" + doctorID + ", doctorName=" + doctorName + ", dateOfBirth=" + dateOfBirth

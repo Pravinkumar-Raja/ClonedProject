@@ -218,19 +218,59 @@ import java.util.*
 
 	@Override
 	public ArrayList<DoctorBean> suggestDoctors(String patientId, Date date) {
-		ArrayList<DoctorBean> sg=new ArrayList<DoctorBean>();
-		int i=0;
-		java.sql.Date e=new java.sql.Date(date.getTime());
-		
-		AppointmentBean ab=new AppointmentBean();
-		try {
-			ps=con.prepareStatement("select * from OCS_TBL_LEAVE where DATE=?");
-		ps.setDate(1, e);
-		i=ps.executeUpdate();
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+//		ArrayList<DoctorBean> sg=new ArrayList<DoctorBean>();
+//		int i=0;
+//		java.sql.Date e=new java.sql.Date(date.getTime());
+//		
+//		AppointmentBean ab=new AppointmentBean();
+//		try {
+//			ps=con.prepareStatement("select * from OCS_TBL_LEAVE where DATE=?");
+//		ps.setDate(1, e);
+//		i=ps.executeUpdate();
+//		} catch (SQLException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+		ArrayList<DoctorBean> add=new ArrayList<>();
+		Connection con=null;
+		PreparedStatement ps1=null,ps2=null,ps3=null,ps4=null;
+		ResultSet rs1=null,rs2=null,rs3=null,rs4=null;
+		try
+		{
+			con=getCon();
+			String q1="Select problem from patient where patientid=?";	
+			ps1=con.prepareStatement(q1);
+			ps1.setString(1, "patientid");
+			rs1=ps1.executeQuery();
+			
+			String problem =null;
+			{
+				if(rs1.next())
+				{
+					problem=rs1.getString("problem");
+					
+				}
+				else
+				{
+					return add;
+				}
+			}
+			
+			
+			String q2="Select * from OCS_TBL_DOCTOR where specialization=?";
+			ps1=con.prepareStatement(q2);
+			ps2.setString(1, problem);
+			rs2=ps2.executeQuery();
+			ArrayList<DoctorBean> match=new ArrayList<>();
+			while(rs2.next())
+			{
+				match.add(new DoctorBean(rs2.getString("doctorid"),rs2.getString("doctorname"),rs2.getString("specialization"),rs2.getString("contact")));
+			}
+		}catch(Exception e)
+		{
+			
 		}
+		
 		return null;
 	}
 
