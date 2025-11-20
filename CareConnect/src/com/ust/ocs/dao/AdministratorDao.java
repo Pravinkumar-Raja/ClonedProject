@@ -262,9 +262,27 @@ import java.util.*
 			ps2.setString(1, problem);
 			rs2=ps2.executeQuery();
 			ArrayList<DoctorBean> match=new ArrayList<>();
+			DoctorBean db=new DoctorBean();
+			db.setDoctorID(rs2.getString("doctorid"));
+			db.setDoctorName(rs2.getString("doctorname"));
+			db.setDateOfBirth(rs2.getDate("dateofbirth"));
+			db.setDateOfJoining(rs2.getDate("dateofjoining"));
+			db.setGender(rs2.getString("gender"));
+			db.setSpecialization(rs2.getString("specialization"));
+			db.setQualification(rs2.getString("qualification"));
+			db.setYearsOfExperience(rs2.getInt("yearsofexperience"));
+			db.setStreet(rs2.getString("street"));
+			db.setLocation(rs2.getString("location"));
+			db.setCity(rs2.getString("city"));
+			db.setState(rs2.getString("state"));
+			db.setPincode(rs2.getString("pincode"));
+			db.setContactNumber(rs2.getString("contactNumber"));
+			db.setEmailID(rs2.getString("emailid"));
+			
+			
 			while(rs2.next())
 			{
-				match.add(new DoctorBean(rs2.getString("doctorid"),rs2.getString("doctorname"),rs2.getString("specialization"),rs2.getString("contact")));
+				match.add(db);
 			}
 		}catch(Exception e)
 		{
