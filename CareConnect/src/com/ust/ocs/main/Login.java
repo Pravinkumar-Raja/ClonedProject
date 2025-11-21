@@ -387,10 +387,24 @@ public static DoctorBean d;
 			ab.setAppointmentDate(dt);
 			ad.suggestDoctors(pId, dt);
 			break;
+			
+//			String pId = JOptionPane.showInputDialog("Enter the Patient id");
+//            ab.setPatientID(pId);
+//
+//            String date = JOptionPane.showInputDialog("Enter the date");
+//            Date dt = null;
+//            try {
+//                dt = sdf.parse(date);
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//            ab.setAppointmentDate(dt);
+//            ad.suggestDoctors(pId, dt);
+			//break;
 		case "Exit": System.exit(0);
 		}
 		
-		}while(ch!="Exit");
+		}while(!ch.equalsIgnoreCase("Exit"));
 		
 			}
 			else if(pd.loginPatient(cb)==1){
@@ -399,21 +413,58 @@ public static DoctorBean d;
 			}
 			else if(pd.loginPatient(cb)==0)
 			{
-				// Login failed (USERID doesn't exist), so we call the registration method
-			    JOptionPane.showMessageDialog(null, "User ID not found. Please register to continue.");
-			    
-			    // Redirect to registration process (you can pass the patient data or handle accordingly)
-			    boolean registrationSuccess = pd.redirectToRegistration(new PatientBean(), cb.getPassword());
-			    
-			    if(registrationSuccess)
-			    {
-			    	JOptionPane.showMessageDialog(null, "Registration successful! You can now log in.");
-			    }
-			    else
-			    {
-			    	JOptionPane.showMessageDialog(null, "Registration failed. Please try again.");
-			    }
+//				// Login failed (USERID doesn't exist), so we call the registration method
+//			    JOptionPane.showMessageDialog(null, "User ID not found. Please register to continue.");
+//			    PatientBean patientBean =new PatientBean();
+//			    patientBean.setUserID("someUniqueUserID");  // or generate/set it if not already set
+//			    patientBean.setPatientID("someUniquePatientID");  // set a patient ID if required
+//			    patientBean.setAppointmentDate(new java.util.Date()); // or set a specific appointment date
+//			    patientBean.setAilmentType("Ailment Type Example");
+//			    patientBean.setAilmentDetails("Details about the ailment");
+//			    patientBean.setDiagnosisHistory("Some previous diagnosis history");
+//
+//			    // Redirect to registration process (you can pass the patient data or handle accordingly)
+//			    boolean registrationSuccess = pd.register(patientBean, cb.getPassword());
+//			    
+//			    if(registrationSuccess)
+//			    {
+//			    	JOptionPane.showMessageDialog(null, "Registration successful! You can now log in.");
+//			    }
+//			    else
+//			    {
+//			    	JOptionPane.showMessageDialog(null, "Registration failed. Please try again.");
+//			    }
+//			}else if (pd.loginPatient(cb) == 0) {
+            // User not found, registration
+            JOptionPane.showMessageDialog(null, "User ID not found. Please register to continue.");
+            PatientBean patientBean = new PatientBean();
+            patientBean.setUserID(JOptionPane.showInputDialog("UniqueUserID"));  // or generate/set it if not already set
+            patientBean.setPatientID(JOptionPane.showInputDialog("UniquePatientID"));  // set a patient ID if required
+            patientBean.setAppointmentDate(new java.util.Date()); // or set a specific appointment date
+
+			String dat=JOptionPane.showInputDialog("Enter the date of birth(yyyy/mm/dd)");
+			java.util.Date dob = null;
+			try {
+				dob = sdf.parse(dat);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+//			java.sql.Date sqld=new java.sql.Date(dob.getTime());
+			patientBean.setAppointmentDate(dob);
+            patientBean.setAilmentType(JOptionPane.showInputDialog("Ailment Type Example(Cardiology)"));
+            patientBean.setAilmentDetails(JOptionPane.showInputDialog("Details about the ailment"));
+            patientBean.setDiagnosisHistory(JOptionPane.showInputDialog("Some previous diagnosis history"));
+
+            // Redirect to registration process
+            boolean registrationSuccess = pd.register(patientBean, cb.getPassword());
+
+            if (registrationSuccess) {
+                JOptionPane.showMessageDialog(null, "Registration successful! You can now log in.");
+            } else {
+                JOptionPane.showMessageDialog(null, "Registration failed. Please try again.");
+            }
+        }
 			else
 			{
 				JOptionPane.showMessageDialog(null, "Login Failed");

@@ -23,12 +23,6 @@ public class PatientDao implements Patient{
 	 private static Connection con = AdministratorDao.getCon();
 	    private static PreparedStatement ps;
 	    private static ResultSet rs;
-
-	    public static String generatePatientID() {
-	        // Generate a unique Patient ID (you can use a UUID or an auto-increment strategy)
-	        return "P" + System.currentTimeMillis();
-	    }
-	
 	public int loginPatient(CredentialBean creadential)
 	{
 		int isLoggedin=0;
@@ -54,50 +48,118 @@ public class PatientDao implements Patient{
     }
 
 	
-	public boolean redirectToRegistration(PatientBean patient, String password) {
+//	public boolean redirectToRegistration(PatientBean patient, String password) {
+//	   
+//	    JOptionPane.showMessageDialog(null, "Please fill in your details to register as a patient.");
+//	    boolean isRegistered = false;
+//        try {
+//            // Generate unique Patient ID if userID is not provided
+//            if (patient.getUserID() == null || patient.getUserID().isEmpty()) {
+//                patient.setUserID(generatePatientID()); // Set generated userID if not provided
+//            }
+//
+//            // Insert the user credentials into ocs_tbl_credentials
+//            String sqlCredentials = "INSERT INTO ocs_tbl_credentials (USERID, PASSWORD, USERTYPE, LOGINSTATUS) "
+//                                    + "VALUES (?, ?, 'user', 1)";
+//            ps = con.prepareStatement(sqlCredentials);
+//            ps.setString(1, patient.getUserID()); // Use the patient ID or provided userID
+//            ps.setString(2, password); // Store the password
+//
+//            int credentialResult = ps.executeUpdate();
+//
+//            // If credentials are inserted successfully, store patient details
+//            if (credentialResult > 0) {
+//                String sqlPatient = "INSERT INTO ocs_tbl_patients (patientid, userID, appointmentDate, ailmentType, ailmentDetails, diagnosisHistory) "
+//                                    + "VALUES (?, ?, ?, ?, ?, ?)";
+//                ps = con.prepareStatement(sqlPatient);
+//                ps.setString(1, patient.getPatientID());
+//                ps.setString(2, patient.getUserID()); // Use the patient ID or provided userID
+//                ps.setDate(3, new java.sql.Date(patient.getAppointmentDate().getTime()));
+//                ps.setString(4, patient.getAilmentType());
+//                ps.setString(5, patient.getAilmentDetails());
+//                ps.setString(6, patient.getDiagnosisHistory());
+//
+//                int patientResult = ps.executeUpdate();
+//
+//                if (patientResult > 0) {
+//                    isRegistered = true;
+//                }
+//            }
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return isRegistered;
+//    }
 	   
-	    JOptionPane.showMessageDialog(null, "Please fill in your details to register as a patient.");
-	    boolean isRegistered = false;
-        try {
-            // Generate unique Patient ID if userID is not provided
-            if (patient.getUserID() == null || patient.getUserID().isEmpty()) {
-                patient.setUserID(generatePatientID()); // Set generated userID if not provided
-            }
 
-            // Insert the user credentials into ocs_tbl_credentials
-            String sqlCredentials = "INSERT INTO ocs_tbl_credentials (USERID, PASSWORD, USERTYPE, LOGINSTATUS) "
-                                    + "VALUES (?, ?, 'user', 1)";
-            ps = con.prepareStatement(sqlCredentials);
-            ps.setString(1, patient.getUserID()); // Use the patient ID or provided userID
-            ps.setString(2, password); // Store the password
+	    // Register method
+	    public boolean register(PatientBean patient, String password) {
+	    	 JOptionPane.showMessageDialog(null, "Please fill in your details to register as a patient.");
+	    	    boolean isRegistered = false;
+	    	    try {
+	    	        // Generate unique Patient ID if not already provided
+	    	        if (patient.getUserID() == null || patient.getUserID().isEmpty()) {
+	    	            patient.setUserID(generatePatientID()); // Set generated userID if not provided
+	    	        }
 
-            int credentialResult = ps.executeUpdate();
+	    	        // Ensure USERID is not too long (truncate to 10 characters if needed)
+	    	        if (patient.getUserID().length() > 10) {
+	    	            patient.setUserID(patient.getUserID().substring(0, 10)); // Truncate to 10 characters
+	    	        }
 
-            // If credentials are inserted successfully, store patient details
-            if (credentialResult > 0) {
-                String sqlPatient = "INSERT INTO ocs_tbl_patients (patientid, userID, appointmentDate, ailmentType, ailmentDetails, diagnosisHistory) "
-                                    + "VALUES (?, ?, ?, ?, ?, ?)";
-                ps = con.prepareStatement(sqlPatient);
-                ps.setString(1, patient.getPatientID());
-                ps.setString(2, patient.getUserID()); // Use the patient ID or provided userID
-                ps.setDate(3, new java.sql.Date(patient.getAppointmentDate().getTime()));
-                ps.setString(4, patient.getAilmentType());
-                ps.setString(5, patient.getAilmentDetails());
-                ps.setString(6, patient.getDiagnosisHistory());
+	    	        // Insert the user credentials into ocs_tbl_credentials
+	    	        String sqlCredentials = "INSERT INTO ocs_tbl_credentials (USERID, PASSWORD, USERTYPE, LOGINSTATUS) "
+	    	                                + "VALUES (?, ?, 'user', 1)";
+	    	        ps = con.prepareStatement(sqlCredentials);
+	    	        ps.setString(1, patient.getUserID());  // Use truncated userID
+	    	        ps.setString(2, password);  // Store the password
 
-                int patientResult = ps.executeUpdate();
+	    	        int credentialResult = ps.executeUpdate();
 
-                if (patientResult > 0) {
-                    isRegistered = true;
-                }
-            }
+	    	        // If credentials are inserted successfully, store patient details
+	    	        if (credentialResult > 0) {
+	    	            // Ensure PATIENTID doesn't exceed the column size (e.g., VARCHAR(50))
+	    	            if (patient.getPatientID().length() > 50) {
+	    	                patient.setPatientID(patient.getPatientID().substring(0, 50)); // Truncate if necessary
+	    	            }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return isRegistered;
-    }
-	   
+	    	            String sqlPatient = "INSERT INTO ocs_tbl_patient (patientid, userID, appointment_Date, ailment_Type, ailment_Details, diagnosis_History) "
+	    	                                + "VALUES (?, ?, ?, ?, ?, ?)";
+	    	            ps = con.prepareStatement(sqlPatient);
+	    	            ps.setString(1, patient.getPatientID());  // Use generated or provided patientID
+	    	            ps.setString(2, patient.getUserID());  // Use the userID for patient
+	    	            ps.setDate(3, new java.sql.Date(patient.getAppointmentDate().getTime()));
+	    	            ps.setString(4, patient.getAilmentType());
+	    	            ps.setString(5, patient.getAilmentDetails());
+	    	            ps.setString(6, patient.getDiagnosisHistory());
+
+	    	            int patientResult = ps.executeUpdate();
+
+	    	            if (patientResult > 0) {
+	    	                isRegistered = true;
+	    	            }
+	    	        }
+
+	    	    } catch (SQLException e) {
+	    	        e.printStackTrace();
+	    	    }
+	    	    return isRegistered;
+	    	}
+
+	    	// Method to generate a unique Patient ID (shorter version)
+	    	private String generatePatientID() {
+	    	    // Use a shorter format that doesn't exceed the column size (e.g., 50 characters max)
+	    	    String patientID = "PAT" + System.currentTimeMillis(); // Generates a long string with current timestamp
+
+	    	    // Ensure the ID doesn't exceed 50 characters
+	    	    if (patientID.length() > 50) {
+	    	        patientID = patientID.substring(0, 50); // Truncate if necessary
+	    	    }
+
+	    	    return patientID;
+	    	}
+	
 
 	@Override
 	public String addAilmentDetails(PatientBean patientBean) {
