@@ -14,7 +14,7 @@ import com.ust.ocs.dao.*;
 public class Login {
 	public static String choice, id,password,ch;
 	public static boolean b;
-
+	public static ArrayList<DoctorBean>md=new ArrayList<DoctorBean>();
 	public static ArrayList <DoctorBean>al=new ArrayList<>();
 public static DoctorBean d;
 	public static void main(String[] args) {
@@ -28,14 +28,14 @@ public static DoctorBean d;
 		password=JOptionPane.showInputDialog("Enter the Password");
 		cb.setPassword(password);
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd");
-		
+		PatientDao pd=new PatientDao();
 //		if(cb.getUserID().equalsIgnoreCase("Admin")&&cb.getPassword().equalsIgnoreCase("Admin@123"))
 //		{
 //			cb.setLoginStatus(1);
 //			cb.setUserType("Admin");
-			ad.login(cb);
+			int l=ad.loginAdmin(cb);
 
-			if(cb.getLoginStatus()==1)
+			if(l==1)
 			{
 				JOptionPane.showMessageDialog(null, "Logged in Successfully");
 				System.out.println("Logged in Successfully");
@@ -104,51 +104,58 @@ public static DoctorBean d;
 			d.setContactNumber(JOptionPane.showInputDialog("Enter the Contact Number"));
 			d.setEmailID(JOptionPane.showInputDialog("Enter the email id"));
 			System.out.println(ad.addDoctor(d));
-			al.add(d);
+//			al.add(d);
 			ad.addDoctor(d);
+		
 			
 		//}
 		
 		break;
-		case "AD-002": ArrayList<DoctorBean>md=new ArrayList<DoctorBean>();
+		case "AD-002": 
 		md=ad.viewAllDoctors();
+		al.addAll(md);
 		for(DoctorBean al1:md)
 		{
 			System.out.println(al1);
 		}
+
+	
 			break;
 			
 		case "AD-003": 	String str=JOptionPane.showInputDialog("Enter Yes or No");
 		if(str.equalsIgnoreCase("Yes"))
-		{
-
+		{	
+			
+			
 			ch=JOptionPane.showInputDialog("Enter Doctor id");
+			
+			al.addAll(md);
+	        boolean doctorFound = false;  // Flag to check if doctor is found
+	        DoctorBean selectedDoctor = null;
 
-			for(DoctorBean arr2:al)
-			{
-				if(arr2.getDoctorID().equals(ch))
+	        // Check if doctor ID exists in the list
+	        if (al != null && !al.isEmpty()) {
+	            for (DoctorBean arr2 : al) {
+	                System.out.println("Doctor ID: " + arr2.getDoctorID());  // Debug print: show doctor IDs in the list
+	                if (arr2.getDoctorID().equals(ch)) {
+	                    selectedDoctor = arr2;
+	                    doctorFound = true;
+	                    break;  // Break out of the loop once doctor is found
+	                }
+	            }
+	        } else {
+	            System.out.println("Doctor list is empty or null.");
+	        }
+
+				if(doctorFound)
 				{
 					do {
 						choice=JOptionPane.showInputDialog("Enter the field (Name,Gender,DOB,Qualification,Specilization,YOE,DOJ,Street,Location,State,City,Pincode,CNo,Email,Exit");
 						switch(choice)
 						{
-//						case "Id": arr2.setDoctorID(JOptionPane.showInputDialog("Enter the new Id"));
-//						b=ad.modifyDoctor(arr2);
-//						if(b)
-//						{
-//							JOptionPane.showMessageDialog(null, "Modified the details Successfully");
-//							System.out.println("Modified the details Successfully");
-//						}
-//						else
-//						{
-//							JOptionPane.showMessageDialog(null, "Failed to Modify");
-//						}
-//						
-//						break;
-
 						case "Name": 
-							arr2.setDoctorName(JOptionPane.showInputDialog("Enter the new name"));
-						b=ad.modifyDoctor(arr2);
+							selectedDoctor.setDoctorName(JOptionPane.showInputDialog("Enter the new name"));
+						b=ad.modifyDoctor(selectedDoctor);
 						if(b)
 						{
 							JOptionPane.showMessageDialog(null, "Modified the details Successfully");
@@ -160,8 +167,8 @@ public static DoctorBean d;
 						}
 						break;
 	
-						case "Gender":  arr2.setGender(JOptionPane.showInputDialog("Enter the new Gender"));
-						b=ad.modifyDoctor(arr2);
+						case "Gender":  selectedDoctor.setGender(JOptionPane.showInputDialog("Enter the new Gender"));
+						b=ad.modifyDoctor(selectedDoctor);
 						if(b)
 						{
 							JOptionPane.showMessageDialog(null, "Modified the details Successfully");
@@ -182,9 +189,9 @@ public static DoctorBean d;
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-						arr2.setDateOfBirth(dob1);
+							selectedDoctor.setDateOfBirth(dob1);
 				        
-						b=ad.modifyDoctor(arr2);
+						b=ad.modifyDoctor(selectedDoctor);
 						if(b)
 						{
 							JOptionPane.showMessageDialog(null, "Modified the details Successfully");
@@ -196,8 +203,8 @@ public static DoctorBean d;
 						}
 						break;
 	
-						case "Qualification": arr2.setQualification(JOptionPane.showInputDialog("Enter the new Qualification"));
-						b=ad.modifyDoctor(arr2);
+						case "Qualification": selectedDoctor.setQualification(JOptionPane.showInputDialog("Enter the new Qualification"));
+						b=ad.modifyDoctor(selectedDoctor);
 						if(b)
 						{
 							JOptionPane.showMessageDialog(null, "Modified the details Successfully");
@@ -209,8 +216,8 @@ public static DoctorBean d;
 						}
 						break;
 	
-						case "Specialization": arr2.setSpecialization(JOptionPane.showInputDialog("Enter the new Specialization"));
-						b=ad.modifyDoctor(arr2);
+						case "Specialization": selectedDoctor.setSpecialization(JOptionPane.showInputDialog("Enter the new Specialization"));
+						b=ad.modifyDoctor(selectedDoctor);
 						if(b)
 						{
 							JOptionPane.showMessageDialog(null, "Modified the details Successfully");
@@ -222,8 +229,8 @@ public static DoctorBean d;
 						}
 						break;
 	
-						case "YOE": arr2.setYearsOfExperience(Integer.parseInt(JOptionPane.showInputDialog("Enter the new YOE")));
-						b=ad.modifyDoctor(arr2);
+						case "YOE": selectedDoctor.setYearsOfExperience(Integer.parseInt(JOptionPane.showInputDialog("Enter the new YOE")));
+						b=ad.modifyDoctor(selectedDoctor);
 						if(b)
 						{
 							JOptionPane.showMessageDialog(null, "Modified the details Successfully");
@@ -244,8 +251,8 @@ public static DoctorBean d;
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-						arr2.setDateOfJoining(doj1);
-						b=ad.modifyDoctor(arr2);
+							selectedDoctor.setDateOfJoining(doj1);
+						b=ad.modifyDoctor(selectedDoctor);
 						if(b)
 						{
 							JOptionPane.showMessageDialog(null, "Modified the details Successfully");
@@ -257,8 +264,8 @@ public static DoctorBean d;
 						}
 						break;
 	
-						case "Street":  arr2.setStreet(JOptionPane.showInputDialog("Enter the new Street"));
-						b=ad.modifyDoctor(arr2);
+						case "Street":  selectedDoctor.setStreet(JOptionPane.showInputDialog("Enter the new Street"));
+						b=ad.modifyDoctor(selectedDoctor);
 						if(b)
 						{
 							JOptionPane.showMessageDialog(null, "Modified the details Successfully");
@@ -270,8 +277,8 @@ public static DoctorBean d;
 						}
 						break;
 	
-						case "Location":  arr2.setLocation(JOptionPane.showInputDialog("Enter the new Location"));
-						b=ad.modifyDoctor(arr2);
+						case "Location":  selectedDoctor.setLocation(JOptionPane.showInputDialog("Enter the new Location"));
+						b=ad.modifyDoctor(selectedDoctor);
 						if(b)
 						{
 							JOptionPane.showMessageDialog(null, "Modified the details Successfully");
@@ -283,8 +290,8 @@ public static DoctorBean d;
 						}
 						break;
 	
-						case "State":  arr2.setState(JOptionPane.showInputDialog("Enter the new State"));
-						b=ad.modifyDoctor(arr2);
+						case "State":  selectedDoctor.setState(JOptionPane.showInputDialog("Enter the new State"));
+						b=ad.modifyDoctor(selectedDoctor);
 						if(b)
 						{
 							JOptionPane.showMessageDialog(null, "Modified the details Successfully");
@@ -296,8 +303,8 @@ public static DoctorBean d;
 						}
 						break;
 	
-						case "City":  arr2.setCity(JOptionPane.showInputDialog("Enter the new City"));
-						b=ad.modifyDoctor(arr2);
+						case "City":  selectedDoctor.setCity(JOptionPane.showInputDialog("Enter the new City"));
+						b=ad.modifyDoctor(selectedDoctor);
 						if(b)
 						{
 							JOptionPane.showMessageDialog(null, "Modified the details Successfully");
@@ -309,8 +316,8 @@ public static DoctorBean d;
 						}
 						break;
 	
-						case "Pincode":  arr2.setPincode(JOptionPane.showInputDialog("Enter the new Pincode"));
-						b=ad.modifyDoctor(arr2);
+						case "Pincode":  selectedDoctor.setPincode(JOptionPane.showInputDialog("Enter the new Pincode"));
+						b=ad.modifyDoctor(selectedDoctor);
 						if(b)
 						{
 							JOptionPane.showMessageDialog(null, "Modified the details Successfully");
@@ -322,8 +329,8 @@ public static DoctorBean d;
 						}
 						break;
 	
-						case "CNo":  arr2.setContactNumber(JOptionPane.showInputDialog("Enter the new Contact No"));
-						b=ad.modifyDoctor(arr2);
+						case "CNo":  selectedDoctor.setContactNumber(JOptionPane.showInputDialog("Enter the new Contact No"));
+						b=ad.modifyDoctor(selectedDoctor);
 						if(b)
 						{
 							JOptionPane.showMessageDialog(null, "Modified the details Successfully");
@@ -335,8 +342,8 @@ public static DoctorBean d;
 						}
 						break;
 	
-						case "Email":  arr2.setEmailID(JOptionPane.showInputDialog("Enter the new Email"));
-						b=ad.modifyDoctor(arr2);
+						case "Email":  selectedDoctor.setEmailID(JOptionPane.showInputDialog("Enter the new Email"));
+						b=ad.modifyDoctor(selectedDoctor);
 						if(b)
 						{
 							JOptionPane.showMessageDialog(null, "Modified the details Successfully");
@@ -356,7 +363,6 @@ public static DoctorBean d;
 
 			}
 
-		}
 		break;
 		case "AD-004":	 String rm=JOptionPane.showInputDialog("Do you want to Remove (Yes or No)");
 		if(rm.equalsIgnoreCase(rm))
@@ -387,10 +393,35 @@ public static DoctorBean d;
 		}while(ch!="Exit");
 		
 			}
-			else {
+			else if(pd.loginPatient(cb)==1){
+					
+				JOptionPane.showMessageDialog(null, "Logged in Successfully as user");
+			}
+			else if(pd.loginPatient(cb)==0)
+			{
+				// Login failed (USERID doesn't exist), so we call the registration method
+			    JOptionPane.showMessageDialog(null, "User ID not found. Please register to continue.");
+			    
+			    // Redirect to registration process (you can pass the patient data or handle accordingly)
+			    boolean registrationSuccess = pd.redirectToRegistration(new PatientBean(), cb.getPassword());
+			    
+			    if(registrationSuccess)
+			    {
+			    	JOptionPane.showMessageDialog(null, "Registration successful! You can now log in.");
+			    }
+			    else
+			    {
+			    	JOptionPane.showMessageDialog(null, "Registration failed. Please try again.");
+			    }
+			}
+			else
+			{
 				JOptionPane.showMessageDialog(null, "Login Failed");
 				System.out.println("Retry again");
+				
 			}
+			
+			
 			
 		
 		
